@@ -1,3 +1,4 @@
+import os
 import torch
 import time
 from transformers import AutoTokenizer
@@ -7,13 +8,18 @@ from .model import DissonanceModel
 from .config import Config
 
 class DissonancePipeline:
-    def __init__(self, weights_path="dissonance_model_weights.pth"):
+    def __init__(self, weights_path="dissonance_model_1000.pth"):
         logger.info("Initializing Dissonance Pipeline...")
+        
+        # Указываем путь к кэшу явно, чтобы избежать OSError
+        cache_dir = "/tmp/huggingface"
+        os.makedirs(cache_dir, exist_ok=True)
+        
         self.tokenizer = AutoTokenizer.from_pretrained(
-                Config.MODEL_NAME, 
-                local_files_only=False, 
-                    trust_remote_code=True
-            )
+            Config.MODEL_NAME, 
+            cache_dir=cache_dir,
+            local_files_only=False
+        )
         
         # Инициализируем модель с правильным количеством реакций (12)
         self.model = DissonanceModel(model_name=Config.MODEL_NAME, k_reactions=len(Config.TARGET_REACTIONS))
