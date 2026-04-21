@@ -9,7 +9,11 @@ from .config import Config
 class DissonancePipeline:
     def __init__(self, weights_path="dissonance_model_weights.pth"):
         logger.info("Initializing Dissonance Pipeline...")
-        self.tokenizer = AutoTokenizer.from_pretrained(Config.MODEL_NAME)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+                Config.MODEL_NAME, 
+                local_files_only=False, 
+                    trust_remote_code=True
+            )
         
         # Инициализируем модель с правильным количеством реакций (12)
         self.model = DissonanceModel(model_name=Config.MODEL_NAME, k_reactions=len(Config.TARGET_REACTIONS))
