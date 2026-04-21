@@ -1,0 +1,10 @@
+streamlit
+torch
+transformers
+pandas
+numpy
+scikit-learn
+matplotlib
+scipy
+loguru
+gdown
