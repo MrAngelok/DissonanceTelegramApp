@@ -52,19 +52,16 @@ class DissonancePipeline:
 
         # 3. Инференс модели
         with torch.no_grad():
-            probability = self.model(
+            raw_logit = self.model(
                 input_ids=inputs['input_ids'],
                 attention_mask=inputs['attention_mask'],
                 v_r=v_r
             )
+            probability = torch.sigmoid(raw_logit)
             
         latency_ms = (time.perf_counter() - start_time) * 1000
-        
-        if latency_ms > 500:
-            logger.warning(f"Latency requirement breached: {latency_ms:.2f} ms") 
 
         return {
             "dissonance_score": probability.item(),
-            "latency_ms": round(latency_ms, 2),
-            "is_anomaly": probability.item() >= 0.27
+            "latency_ms": round(latency_ms, 2)
         }

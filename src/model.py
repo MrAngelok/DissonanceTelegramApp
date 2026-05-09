@@ -30,6 +30,6 @@ class DissonanceModel(nn.Module):
         
         # Классификационная головка
         logit = self.mlp(z)
-        probability = torch.sigmoid(logit) # Вероятность аномалии 
+        probability = self.mlp(z) # Вероятность аномалии 
         
         return probability
